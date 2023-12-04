@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider   = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Organizador {
+  id            String @id @default(uuid()) @map("id")
+  nome          String @map("nome")
+  cpfOUCnpj     String @map("cpf_cnpj")
+  email         String @map("email")
+  telefone      String @map("telefone")
+  senha         String @map("senha")
+  eventos       Evento[]
+
+  @@map("organizadores")
+}
+
+model Participante {
+  id            String @id @default(uuid()) @map("id")
+  nome          String @map("nome")
+  cpf           String @map("cpf")
+  email         String @map("email")
+  telefone      String @map("telefone")
+  senha         String @map("senha")
+
+  @@map("participantes")
+}
+
+model Evento {
+  id            String @id @default(uuid()) @map("id")
+  nome          String @map("nome")
+  descricao     String @map("descricao")
+  preco         Decimal @map("preco")
+  cidadeEvento  String @map("cidade_evento")
+  ufEvento      String @map("uf_evento")
+  dataInicio    DateTime @db.Date @map("data_inicio")
+  dataFim       DateTime @db.Date @map("data_fim")
+  organizador   Organizador @relation(fields: [idOrganizador], references: [id])
+  idOrganizador String @map("id_organizador")
+
+  @@map("eventos")
+}

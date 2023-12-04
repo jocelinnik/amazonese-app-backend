@@ -1,0 +1,47 @@
+name: amazonese-app-backend CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout no repositorio
+        uses: actions/checkout@v3
+      - name: Substituindo variaveis de ambiente
+        uses: franzbischoff/replace_envs@v1
+        env:
+          NODE_ENV: ${{ env.NODE_ENV }}
+          HTTP_PORTA: ${{ env.HTTP_PORTA }}
+          CIFRADOR_SENHAS_SEGREDO: ${{ env.CIFRADOR_SENHAS_SEGREDO }}
+          CIFRADOR_SENHAS_ITERACOES: ${{ env.CIFRADOR_SENHAS_ITERACOES }}
+          JWT_CHAVE: ${{ env.JWT_CHAVE }}
+          JWT_SUB: ${{ env.JWT_SUB }}
+          JWT_EXPIRACAO_EM_MINUTOS: ${{ env.JWT_EXPIRACAO_EM_MINUTOS }}
+          JWT_REFRESH_EXPIRACAO_EM_HORAS: ${{ env.JWT_REFRESH_EXPIRACAO_EM_HORAS }}
+          MYSQL_BANCODEDADOS: ${{ env.MYSQL_BANCODEDADOS }}
+          MYSQL_ENDERECO: ${{ env.MYSQL_ENDERECO }}
+          MYSQL_PORTA: ${{ env.MYSQL_PORTA }}
+          MYSQL_SENHA: ${{ env.MYSQL_SENHA }}
+          MYSQL_USUARIO: ${{ env.MYSQL_USUARIO }}
+        with:
+          from_file: '.env'
+          to_file: '.env'
+          commit: 'false'
+      - name: Configurando o Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18.16.0'
+      - name: Instalando dependencias e gerando a aplicacao
+        run: |
+          npm ci
+          npm run build --if-present
+      - name: Implantando no Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: amazonese-app-backend
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
