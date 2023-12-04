@@ -62,7 +62,7 @@ jobs:
           push: true
           tags: jocelinnik/amazonese-app-backend:${{ github.sha }}
           build-args:
-            - 'HTTP_PORTA=${{ env.HTTP_PORTA }}'
+            HTTP_PORTA: ${{ env.HTTP_PORTA }}
 
       - name: Implantando no Azure Web App
         uses: azure/webapps-deploy@v2
