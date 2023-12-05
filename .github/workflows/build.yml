@@ -11,9 +11,12 @@ jobs:
     steps:
       - name: Checkout no repositorio
         uses: actions/checkout@v3
-      
-      - run: |
-        cp .env.example .env
+
+      - name: Copiando arquivo .env
+        uses: canastro/copy-file-action@master
+        with:
+          source: ".env.example"
+          target: ".env"
 
       - name: Substituindo variaveis de ambiente
         uses: franzbischoff/replace_envs@v1
