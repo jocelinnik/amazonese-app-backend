@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { Participante } from "@/dominio/modelos/participante.model";
 import { ParticipantesRepository } from "@/dominio/repositorios/participantes.repository";
+import { Evento } from "@/dominio/modelos/evento.model";
 
 class PrismaParticipantesRepository implements ParticipantesRepository {
 
@@ -43,7 +44,17 @@ class PrismaParticipantesRepository implements ParticipantesRepository {
                 senha: participante.senha
             }
         });
-    }    
+    }
+    
+    public async favoritarEvento(evento: Evento, participante: Participante): Promise<void> {
+        await this._conexao.eventoFavorito.create({
+            data: {
+                idEvento: evento.id,
+                idParticipante: participante.id,
+                dataFavorito: new Date()
+            }
+        });
+    }
 }
 
 export { PrismaParticipantesRepository };

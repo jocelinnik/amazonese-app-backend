@@ -2,6 +2,9 @@ FROM node:18.16-slim
 
 WORKDIR /app
 
+RUN apt-get update -y
+RUN apt-get install -y openssl
+
 ARG HTTP_PORTA=80
 
 COPY ./.env /app/.env

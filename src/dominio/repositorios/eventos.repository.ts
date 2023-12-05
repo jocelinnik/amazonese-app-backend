@@ -5,6 +5,8 @@ interface EventosRepository {
 
     buscarEventosPorOrganizador(organizador: Organizador): Promise<Evento[]>;
 
+    buscarPorId(id: string): Promise<Evento>;
+
     salvar(evento: Evento): Promise<void>;
 
 }

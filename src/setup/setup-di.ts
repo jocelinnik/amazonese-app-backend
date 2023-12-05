@@ -4,7 +4,9 @@ import { BuscarEventosPorOrganizador } from "@/aplicacao/casos-uso/buscar-evento
 import { CadastrarNovoEvento } from "@/aplicacao/casos-uso/cadastrar-novo-evento.usecase";
 import { CadastrarNovoOrganizador } from "@/aplicacao/casos-uso/cadastrar-novo-organizador.usecase";
 import { CadastrarNovoParticipante } from "@/aplicacao/casos-uso/cadastrar-novo-participante.usecase";
+import { FavoritarEvento } from "@/aplicacao/casos-uso/favoritar-evento.usecase";
 import { RealizarLoginOrganizador } from "@/aplicacao/casos-uso/realizar-login-organizador.usecase";
+import { RealizarLoginParticipante } from "@/aplicacao/casos-uso/realizar-login-participante.usecase";
 import { CifradorSenhas } from "@/aplicacao/providers/cifrador-senhas";
 import { GerenciadorTokenAutenticacao } from "@/aplicacao/providers/gerenciador-tokens-autenticacao";
 import { EventosRepository } from "@/dominio/repositorios/eventos.repository";
@@ -15,7 +17,9 @@ import { BuscarEventosPorOrganizadorController } from "@/infraestrutura/http/con
 import { CadastrarNovoEventoController } from "@/infraestrutura/http/controllers/cadastrar-novo-evento.controller";
 import { CadastrarNovoOrganizadorController } from "@/infraestrutura/http/controllers/cadastrar-novo-organizador.controller";
 import { CadastrarNovoParticipanteController } from "@/infraestrutura/http/controllers/cadastrar-novo-participante.controller";
+import { FavoritarEventoController } from "@/infraestrutura/http/controllers/favoritar-evento.controller";
 import { RealizarLoginOrganizadorController } from "@/infraestrutura/http/controllers/realizar-login-organizador.controller";
+import { RealizarLoginParticipanteController } from "@/infraestrutura/http/controllers/realizar-login-participante.controller";
 import { VerificadorTokenJWT } from "@/infraestrutura/http/middlewares/verificador-token-jwt.middleware";
 import { CustomJWTGerenciadorTokenAutenticacao } from "@/infraestrutura/providers/custom-jwt-gerenciador-tokens-autenticacao";
 import { CryptoSHA512CifradorSenhas } from "@/infraestrutura/providers/crypto-cifrador-senhas";
@@ -85,6 +89,19 @@ const configurarDependencias = (): void => {
 
         return new CadastrarNovoParticipante({ cifrador, repository });
     });
+    container.set("RealizarLoginParticipante", (cont: ContainerDI): RealizarLoginParticipante => {
+        const repository = cont.get("ParticipantesRepository") as ParticipantesRepository;
+        const cifrador = cont.get("CifradorSenhas") as CifradorSenhas;
+        const gerenciadorToken = cont.get("GerenciadorTokenAutenticacao") as GerenciadorTokenAutenticacao;
+
+        return new RealizarLoginParticipante({ cifrador, gerenciadorToken, repository });
+    });
+    container.set("FavoritarEvento", (cont: ContainerDI): FavoritarEvento => {
+        const eventosRepository = cont.get("EventosRepository") as EventosRepository;
+        const participantesRepository = cont.get("ParticipantesRepository") as ParticipantesRepository;
+
+        return new FavoritarEvento({ eventosRepository, participantesRepository });
+    });
 
     // Configurando as instâncias de objetos middleware
     // HTTP da aplicação...
@@ -120,6 +137,16 @@ const configurarDependencias = (): void => {
         const useCase = cont.get("CadastrarNovoParticipante") as CadastrarNovoParticipante;
 
         return new CadastrarNovoParticipanteController({ useCase });
+    });
+    container.set("RealizarLoginParticipanteController", (cont: ContainerDI): RealizarLoginParticipanteController => {
+        const useCase = cont.get("RealizarLoginParticipante") as RealizarLoginParticipante;
+
+        return new RealizarLoginParticipanteController({ useCase });
+    });
+    container.set("FavoritarEventoController", (cont: ContainerDI): FavoritarEventoController => {
+        const useCase = cont.get("FavoritarEvento") as FavoritarEvento;
+
+        return new FavoritarEventoController({ useCase });
     });
 };
 

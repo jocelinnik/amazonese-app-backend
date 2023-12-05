@@ -29,6 +29,7 @@ class CadastrarNovoEvento {
             descricao: input.descricao,
             preco: input.preco,
             localidade: input.localidade,
+            categorias: input.categorias,
             dataInicio: input.data_inicio,
             dataFim: input.data_fim,
             organizador: organizador

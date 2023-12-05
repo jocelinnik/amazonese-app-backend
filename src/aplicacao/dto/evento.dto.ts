@@ -6,6 +6,7 @@ interface NovoEventoDTO {
         cidade: string;
         uf: string;
     };
+    categorias: string[];
     data_inicio: Date;
     data_fim: Date;
     cpf_cnpj_organizador: string;
@@ -23,4 +24,9 @@ interface DadosEventoDTO {
     data_fim: Date;
 }
 
-export { DadosEventoDTO, NovoEventoDTO };
+interface EventoParaFavoritarDTO {
+    id_evento: string;
+    cpf_participante: string;
+}
+
+export { DadosEventoDTO, EventoParaFavoritarDTO, NovoEventoDTO };

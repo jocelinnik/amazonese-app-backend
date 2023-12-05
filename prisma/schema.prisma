@@ -11,39 +11,62 @@ datasource db {
 }
 
 model Organizador {
-  id            String @id @default(uuid()) @map("id")
-  nome          String @map("nome")
-  cpfOUCnpj     String @map("cpf_cnpj")
-  email         String @map("email")
-  telefone      String @map("telefone")
-  senha         String @map("senha")
-  eventos       Evento[]
+  id                        String @id @default(uuid()) @map("id")
+  nome                      String @map("nome")
+  cpfOUCnpj                 String @map("cpf_cnpj")
+  email                     String @map("email")
+  telefone                  String @map("telefone")
+  senha                     String @map("senha")
+  eventos                   Evento[]
 
   @@map("organizadores")
 }
 
 model Participante {
-  id            String @id @default(uuid()) @map("id")
-  nome          String @map("nome")
-  cpf           String @map("cpf")
-  email         String @map("email")
-  telefone      String @map("telefone")
-  senha         String @map("senha")
+  id                        String @id @default(uuid()) @map("id")
+  nome                      String @map("nome")
+  cpf                       String @map("cpf")
+  email                     String @map("email")
+  telefone                  String @map("telefone")
+  senha                     String @map("senha")
+  eventosFavoritados        EventoFavorito[]
 
   @@map("participantes")
 }
 
 model Evento {
-  id            String @id @default(uuid()) @map("id")
-  nome          String @map("nome")
-  descricao     String @map("descricao")
-  preco         Decimal @map("preco")
-  cidadeEvento  String @map("cidade_evento")
-  ufEvento      String @map("uf_evento")
-  dataInicio    DateTime @db.Date @map("data_inicio")
-  dataFim       DateTime @db.Date @map("data_fim")
-  organizador   Organizador @relation(fields: [idOrganizador], references: [id])
-  idOrganizador String @map("id_organizador")
+  id                        String @id @default(uuid()) @map("id")
+  nome                      String @map("nome")
+  descricao                 String @map("descricao")
+  preco                     Decimal @map("preco")
+  cidadeEvento              String @map("cidade_evento")
+  ufEvento                  String @map("uf_evento")
+  dataInicio                DateTime @db.Date @map("data_inicio")
+  dataFim                   DateTime @db.Date @map("data_fim")
+  idOrganizador             String @map("id_organizador")
+  categorias                CategoriaEvento[]
+  participantesFavoritaram  EventoFavorito[]
+  organizador               Organizador @relation(fields: [idOrganizador], references: [id])
 
   @@map("eventos")
+}
+
+model CategoriaEvento {
+  idEvento                  String @map("id_evento")
+  categoria                 String @map("categoria")
+  evento                    Evento @relation(fields: [idEvento], references: [id])
+
+  @@unique([idEvento, categoria])
+  @@map("categorias_eventos")
+}
+
+model EventoFavorito {
+  idParticipante            String @map("id_participante")
+  idEvento                  String @map("id_evento")
+  dataFavorito              DateTime @default(now()) @map("data_favorito")
+  evento                    Evento @relation(fields: [idEvento], references: [id])
+  participante              Participante @relation(fields: [idParticipante], references: [id])
+
+  @@unique([idParticipante, idEvento])
+  @@map("eventos_favoritos_participantes")
 }

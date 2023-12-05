@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout no repositorio
         uses: actions/checkout@v3
+      
+      - run: |
+        cp .env.example .env
 
       - name: Substituindo variaveis de ambiente
         uses: franzbischoff/replace_envs@v1
@@ -43,30 +46,13 @@ jobs:
           npm ci
           npm run build --if-present
 
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Autenticando no Docker Hub
-        uses: docker/login-action@v3
+      - name: Autenticacao no Azure Container Registry
+        uses: azure/docker-login@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Construindo a imagem e subindo para o Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: jocelinnik/amazonese-app-backend:${{ github.sha }}
-          build-args: |
-            HTTP_PORTA=${{ env.HTTP_PORTA }}
-
-      - name: Implantando no Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: amazonese-app-backend
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: 'jocelinnik/amazonese-app-backend:${{ github.sha }}'
+          login-server: ${{ env.AZURECR_ENDERECO }}
+          username: ${{ env.AZURECR_USUARIO }}
+          password: ${{ env.AZURECR_SENHA }}
+      
+      - run: |
+        docker build -t ${{ env.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.sha }} --build-arg HTTP_PORTA=${{ env.HTTP_PORTA }} .
+        docker push ${{ env.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.sha }}

@@ -10,6 +10,7 @@ type NovoEventoParams = {
     descricao: string;
     preco: number;
     localidade: LocalidadeEvento;
+    categorias: string[];
     dataInicio: Date;
     dataFim: Date;
     organizador: Organizador;
@@ -26,16 +27,18 @@ class Evento {
     private _descricao: string;
     private _preco: number;
     private _localidade: LocalidadeEvento;
+    private _categorias: string[];
     private _dataInicio: Date;
     private _dataFim: Date;
     private _organizador: Organizador;
 
-    private constructor(nome: string, descricao: string, preco: number, localidade: LocalidadeEvento, dataInicio: Date, dataFim: Date, organizador: Organizador, id?: string){
+    private constructor(nome: string, descricao: string, preco: number, localidade: LocalidadeEvento, categorias: string[], dataInicio: Date, dataFim: Date, organizador: Organizador, id?: string){
         this._id = id;
         this._nome = nome;
         this._descricao = descricao;
         this._preco = preco;
         this._localidade = localidade;
+        this._categorias = categorias;
         this._dataInicio = dataInicio;
         this._dataFim = dataFim;
         this._organizador = organizador;
@@ -61,6 +64,10 @@ class Evento {
         return this._localidade;
     }
 
+    public get categorias(): string[] {
+        return this._categorias;
+    }
+
     public get dataInicio(): Date {
         return this._dataInicio;
     }
@@ -79,6 +86,7 @@ class Evento {
             params.descricao,
             params.preco,
             params.localidade,
+            params.categorias,
             params.dataInicio,
             params.dataFim,
             params.organizador
@@ -91,6 +99,7 @@ class Evento {
             params.descricao,
             params.preco,
             params.localidade,
+            params.categorias,
             params.dataInicio,
             params.dataFim,
             params.organizador,
