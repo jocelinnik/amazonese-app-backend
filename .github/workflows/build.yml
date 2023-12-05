@@ -46,6 +46,7 @@ jobs:
         run: |
           npm ci
           npm run build --if-present
+          npx prisma generate
 
       - name: Autenticacao no Azure Container Registry
         uses: azure/docker-login@v1
