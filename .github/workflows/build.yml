@@ -12,11 +12,8 @@ jobs:
       - name: Checkout no repositorio
         uses: actions/checkout@v3
 
-      - name: Copiando arquivo .env
-        uses: canastro/copy-file-action@master
-        with:
-          source: ".env.example"
-          target: ".env"
+      - run: |
+          cp .env.example .env
 
       - name: Substituindo variaveis de ambiente
         uses: franzbischoff/replace_envs@v1
@@ -57,5 +54,5 @@ jobs:
           password: ${{ env.AZURECR_SENHA }}
       
       - run: |
-        docker build -t ${{ env.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.sha }} --build-arg HTTP_PORTA=${{ env.HTTP_PORTA }} .
-        docker push ${{ env.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.sha }}
+          docker build -t ${{ env.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.sha }} --build-arg HTTP_PORTA=${{ env.HTTP_PORTA }} .
+          docker push ${{ env.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.sha }}
