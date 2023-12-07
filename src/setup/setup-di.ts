@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 
+import { BuscarEventosPorLocalidade } from "@/aplicacao/casos-uso/buscar-eventos-por-localidade.usecase";
 import { BuscarEventosPorOrganizador } from "@/aplicacao/casos-uso/buscar-eventos-por-organizador.usecase";
 import { CadastrarNovoEvento } from "@/aplicacao/casos-uso/cadastrar-novo-evento.usecase";
 import { CadastrarNovoOrganizador } from "@/aplicacao/casos-uso/cadastrar-novo-organizador.usecase";
@@ -13,6 +14,7 @@ import { EventosRepository } from "@/dominio/repositorios/eventos.repository";
 import { OrganizadoresRepository } from "@/dominio/repositorios/organizadores.repository";
 import { ParticipantesRepository } from "@/dominio/repositorios/participantes.repository";
 import { ContainerDI } from "@/infraestrutura/di/container-di";
+import { BuscarEventosPorLocalidadeController } from "@/infraestrutura/http/controllers/buscar-eventos-por-localidade.controller";
 import { BuscarEventosPorOrganizadorController } from "@/infraestrutura/http/controllers/buscar-eventos-por-organizador.controller";
 import { CadastrarNovoEventoController } from "@/infraestrutura/http/controllers/cadastrar-novo-evento.controller";
 import { CadastrarNovoOrganizadorController } from "@/infraestrutura/http/controllers/cadastrar-novo-organizador.controller";
@@ -102,6 +104,11 @@ const configurarDependencias = (): void => {
 
         return new FavoritarEvento({ eventosRepository, participantesRepository });
     });
+    container.set("BuscarEventosPorLocalidade", (cont: ContainerDI): BuscarEventosPorLocalidade => {
+        const repository = cont.get("EventosRepository") as EventosRepository;
+
+        return new BuscarEventosPorLocalidade({ repository });
+    });
 
     // Configurando as instâncias de objetos middleware
     // HTTP da aplicação...
@@ -147,6 +154,11 @@ const configurarDependencias = (): void => {
         const useCase = cont.get("FavoritarEvento") as FavoritarEvento;
 
         return new FavoritarEventoController({ useCase });
+    });
+    container.set("BuscarEventosPorLocalidadeController", (cont: ContainerDI): BuscarEventosPorLocalidadeController => {
+        const useCase = cont.get("BuscarEventosPorLocalidade") as BuscarEventosPorLocalidade;
+
+        return new BuscarEventosPorLocalidadeController({ useCase });
     });
 };
 

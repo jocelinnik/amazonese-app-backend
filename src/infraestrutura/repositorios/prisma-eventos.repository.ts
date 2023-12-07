@@ -14,10 +14,44 @@ class PrismaEventosRepository implements EventosRepository {
         });
     }
 
+    public async buscarEventoPorId(id: string): Promise<Evento> {
+        const dadosEvento = await this._conexao.evento.findFirst({
+            where: {
+                id: id
+            },
+            include: {
+                categorias: true,
+                organizador: true
+            }
+        });
+
+        if(!dadosEvento)
+            throw new Error(`O evento com ID ${id} não foi encontrado`);
+
+        return this.hidratarEvento(dadosEvento);
+    }
+
     public async buscarEventosPorOrganizador(organizador: Organizador): Promise<Evento[]> {
         const dadosEventos = await this._conexao.evento.findMany({
             where: {
                 idOrganizador: organizador.id
+            },
+            include: {
+                categorias: true,
+                organizador: true
+            }
+        });
+
+        return dadosEventos.map(evento => this.hidratarEvento(evento));
+    }
+
+    public async buscarEventosPorLocalidade(cidade: string, uf: string): Promise<Evento[]> {
+        const dadosEventos = await this._conexao.evento.findMany({
+            where: {
+                AND: [
+                    { cidadeEvento: cidade },
+                    { ufEvento: uf }
+                ]
             },
             include: {
                 categorias: true,
@@ -44,23 +78,6 @@ class PrismaEventosRepository implements EventosRepository {
                 }
             }
         });
-    }
-
-    public async buscarPorId(id: string): Promise<Evento> {
-        const dadosEvento = await this._conexao.evento.findFirst({
-            where: {
-                id: id
-            },
-            include: {
-                categorias: true,
-                organizador: true
-            }
-        });
-
-        if(!dadosEvento)
-            throw new Error(`O evento com ID ${id} não foi encontrado`);
-
-        return this.hidratarEvento(dadosEvento);
     }
 
     private hidratarEvento(evento): Evento {

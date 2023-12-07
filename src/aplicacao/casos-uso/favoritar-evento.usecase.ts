@@ -19,7 +19,7 @@ class FavoritarEvento {
     }
 
     public async executar(input: EventoParaFavoritarDTO): Promise<void> {
-        const evento = await this._eventosRepository.buscarPorId(input.id_evento);
+        const evento = await this._eventosRepository.buscarEventoPorId(input.id_evento);
         const participante = await this._participantesRepository.buscarPorCpf(input.cpf_participante);
 
         await this._participantesRepository.favoritarEvento(evento, participante);

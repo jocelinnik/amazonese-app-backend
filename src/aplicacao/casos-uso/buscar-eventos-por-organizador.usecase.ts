@@ -25,7 +25,9 @@ class BuscarEventosPorOrganizador {
         return (
             dadosEventos
                 .map(evento => ({
+                    id: evento.id,
                     nome: evento.nome,
+                    categorias: evento.categorias,
                     descricao: evento.descricao,
                     preco: evento.preco,
                     data_inicio: evento.dataInicio,
