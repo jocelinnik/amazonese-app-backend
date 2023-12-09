@@ -4,10 +4,16 @@ type NovoOrganizadorParams = {
     email: string;
     telefone: string;
     senha: string;
+    fraseSecreta: string;
 };
-
-type RecuperarOrganizadorParams = NovoOrganizadorParams & {
+type RecuperarOrganizadorParams = {
     id: string;
+    nome: string;
+    cpfOUcnpj: string;
+    email: string;
+    telefone: string;
+    senha: string;
+    fraseSecreta: string;
 };
 
 class Organizador {
@@ -18,14 +24,16 @@ class Organizador {
     private _email: string;
     private _telefone: string;
     private _senha: string;
+    private _fraseSecreta: string;
 
-    private constructor(nome: string, cpfOUcnpj: string, email: string, telefone: string, senha: string, id?: string){
+    private constructor(nome: string, cpfOUcnpj: string, email: string, telefone: string, senha: string, fraseSecreta: string, id?: string){
         this._id = id;
         this._nome = nome;
         this._cpfOUcnpj = cpfOUcnpj;
         this._email = email;
         this._telefone = telefone;
         this._senha = senha;
+        this._fraseSecreta = fraseSecreta;
     }
 
     public get id(): string | undefined {
@@ -52,13 +60,22 @@ class Organizador {
         return this._senha;
     }
 
+    public get fraseSecreta(): string {
+        return this._fraseSecreta;
+    }
+
+    public set senha(novaSenha: string) {
+        this._senha = novaSenha;
+    }
+
     public static novo(params: NovoOrganizadorParams): Organizador {
         return new Organizador(
             params.nome,
             params.cpfOUcnpj,
             params.email,
             params.telefone,
-            params.senha
+            params.senha,
+            params.fraseSecreta
         );
     }
     
@@ -69,6 +86,7 @@ class Organizador {
             params.email,
             params.telefone,
             params.senha,
+            params.fraseSecreta,
             params.id
         );
     }

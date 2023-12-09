@@ -29,7 +29,8 @@ class PrismaOrganizadoresRepository implements OrganizadoresRepository {
             cpfOUcnpj: dadosOrganizador.cpfOUCnpj,
             email: dadosOrganizador.email,
             telefone: dadosOrganizador.telefone,
-            senha: dadosOrganizador.senha
+            senha: dadosOrganizador.senha,
+            fraseSecreta: dadosOrganizador.fraseSecreta
         });
     }
 
@@ -47,7 +48,8 @@ class PrismaOrganizadoresRepository implements OrganizadoresRepository {
                 cpfOUCnpj: organizador.cpfOUcnpj,
                 email: organizador.email,
                 telefone: organizador.telefone,
-                senha: organizador.senha
+                senha: organizador.senha,
+                fraseSecreta: organizador.fraseSecreta
             }
         });
     }
@@ -59,7 +61,8 @@ class PrismaOrganizadoresRepository implements OrganizadoresRepository {
                 cpfOUCnpj: organizador.cpfOUcnpj,
                 email: organizador.email,
                 telefone: organizador.telefone,
-                senha: organizador.senha
+                senha: organizador.senha,
+                fraseSecreta: organizador.fraseSecreta
             },
             where: {
                 id: organizador.id

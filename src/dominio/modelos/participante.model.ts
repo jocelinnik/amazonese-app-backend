@@ -4,10 +4,16 @@ type NovoParticipanteParams = {
     email: string;
     telefone: string;
     senha: string;
+    fraseSecreta: string;
 };
-
-type RecuperarParticipanteParams = NovoParticipanteParams & {
+type RecuperarParticipanteParams = {
     id: string;
+    nome: string;
+    cpf: string;
+    email: string;
+    telefone: string;
+    senha: string;
+    fraseSecreta: string;
 };
 
 class Participante {
@@ -18,8 +24,9 @@ class Participante {
     private _email: string;
     private _telefone: string;
     private _senha: string;
+    private _fraseSecreta: string;
 
-    private constructor(nome: string, cpf: string, email: string, telefone: string, senha: string, id?: string){
+    private constructor(nome: string, cpf: string, email: string, telefone: string, senha: string, fraseSecreta: string, id?: string){
         this._id = id;
         this._nome = nome;
         this._cpf = cpf;
@@ -52,13 +59,22 @@ class Participante {
         return this._senha;
     }
 
+    public get fraseSecreta(): string {
+        return this._fraseSecreta;
+    }
+
+    public set senha(novaSenha: string) {
+        this._senha = novaSenha;
+    }
+
     public static novo(params: NovoParticipanteParams): Participante {
         return new Participante(
             params.nome,
             params.cpf,
             params.email,
             params.telefone,
-            params.senha
+            params.senha,
+            params.fraseSecreta
         );
     }
 
@@ -69,6 +85,7 @@ class Participante {
             params.email,
             params.telefone,
             params.senha,
+            params.fraseSecreta,
             params.id
         );
     }

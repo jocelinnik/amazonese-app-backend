@@ -9,6 +9,8 @@ interface EventosRepository {
 
     buscarEventosPorLocalidade(cidade: string, uf: string): Promise<Evento[]>;
 
+    buscarEventosProximos(): Promise<Evento[]>;
+
     salvar(evento: Evento): Promise<void>;
 
 }

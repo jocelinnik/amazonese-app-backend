@@ -50,9 +50,28 @@ class PrismaEventosRepository implements EventosRepository {
             where: {
                 AND: [
                     { cidadeEvento: cidade },
-                    { ufEvento: uf }
+                    { ufEvento: uf },
+                    { dataInicio: { gt: new Date() } }
                 ]
             },
+            include: {
+                categorias: true,
+                organizador: true
+            }
+        });
+
+        return dadosEventos.map(evento => this.hidratarEvento(evento));
+    }
+
+    public async buscarEventosProximos(): Promise<Evento[]> {
+        const dadosEventos = await this._conexao.evento.findMany({
+            where: {
+                dataInicio: { gt: new Date() }
+            },
+            orderBy: [
+                { dataInicio: "desc" }
+            ],
+            take: 10,
             include: {
                 categorias: true,
                 organizador: true

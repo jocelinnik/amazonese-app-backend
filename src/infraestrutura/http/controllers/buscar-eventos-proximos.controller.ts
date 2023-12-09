@@ -1,24 +1,23 @@
 import { Request, Response } from "express";
 
-import { BuscarEventosPorLocalidade } from "@/aplicacao/casos-uso/buscar-eventos-por-localidade.usecase";
+import { BuscarEventosProximos } from "@/aplicacao/casos-uso/buscar-eventos-proximos.usecase";
 import { Mensagem } from "@/aplicacao/dto/mensagem.dto";
 
-type BuscarEventosPorLocalidadeControllerParams = {
-    useCase: BuscarEventosPorLocalidade;
+type BuscarEventosProximosControllerParams = {
+    useCase: BuscarEventosProximos;
 };
 
-class BuscarEventosPorLocalidadeController {
+class BuscarEventosProximosController {
 
-    private _useCase: BuscarEventosPorLocalidade;
+    private _useCase: BuscarEventosProximos;
 
-    public constructor(params: BuscarEventosPorLocalidadeControllerParams){
+    public constructor(params: BuscarEventosProximosControllerParams){
         this._useCase = params.useCase;
     }
 
     public async executar(req: Request, res: Response): Promise<void> {
         try{
-            const { cidade, uf } = req.params;
-            const eventos = await this._useCase.executar({ cidade, uf });
+            const eventos = await this._useCase.executar();
             res.status(200).json(eventos);
         }catch(e: any){
             const erro = e as Error;
@@ -33,4 +32,4 @@ class BuscarEventosPorLocalidadeController {
     }
 }
 
-export { BuscarEventosPorLocalidadeController };
+export { BuscarEventosProximosController };

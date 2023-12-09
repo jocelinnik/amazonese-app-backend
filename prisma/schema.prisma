@@ -17,6 +17,7 @@ model Organizador {
   email                     String @map("email")
   telefone                  String @map("telefone")
   senha                     String @map("senha")
+  fraseSecreta              String @map("frase_secreta")
   eventos                   Evento[]
 
   @@map("organizadores")
@@ -29,6 +30,7 @@ model Participante {
   email                     String @map("email")
   telefone                  String @map("telefone")
   senha                     String @map("senha")
+  fraseSecreta              String @map("frase_secreta")
   eventosFavoritados        EventoFavorito[]
 
   @@map("participantes")

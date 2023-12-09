@@ -6,11 +6,18 @@ interface NovoParticipanteDTO {
     email: string;
     telefone: string;
     senha_bruta: string;
+    frase_secreta_bruta: string;
 }
 
 interface LoginParticipanteDTO {
     cpf: string;
     senha_bruta: string;
+}
+
+interface RedefinirSenhaParticipanteDTO {
+    cpf: string;
+    frase_secreta_bruta: string;
+    nova_senha_bruta: string;
 }
 
 interface DadosParticipanteLogadoDTO {
@@ -27,5 +34,6 @@ export {
     DadosParticipanteLogadoDTO,
     LoginParticipanteDTO,
     NovoParticipanteDTO,
-    ParticipanteLogadoDTO
+    ParticipanteLogadoDTO,
+    RedefinirSenhaParticipanteDTO
 };
