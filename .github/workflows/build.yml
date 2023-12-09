@@ -60,12 +60,12 @@ jobs:
 
       - name: Gerando a imagem e subindo para o Azure Container Registry
         run: |
-          docker build -t ${{ vars.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.GITHUB_RUN_ID }} --build-arg HTTP_PORTA=${{ vars.HTTP_PORTA }} .
-          docker push ${{ vars.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.GITHUB_RUN_ID }}
+          docker build -t ${{ vars.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.run_id }} --build-arg HTTP_PORTA=${{ vars.HTTP_PORTA }} .
+          docker push ${{ vars.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.run_id }}
       
       - name: Implantando a nova versao da aplicacao
         uses: azure/webapps-deploy@v2
         with:
           app-name: '${{ vars.AZURE_WEBAPP_NOME }}'
           publish-profile: ${{ vars.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: '${{ vars.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.GITHUB_RUN_ID }}'
+          images: '${{ vars.AZURECR_ENDERECO }}/amazonese-app-backend:${{ github.run_id }}'
