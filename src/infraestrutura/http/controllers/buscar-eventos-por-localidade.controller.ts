@@ -18,6 +18,7 @@ class BuscarEventosPorLocalidadeController {
     public async executar(req: Request, res: Response): Promise<void> {
         try{
             const { cidade, uf } = req.params;
+            console.log({ cidade, uf });
             const eventos = await this._useCase.executar({ cidade, uf });
             res.status(200).json(eventos);
         }catch(e: any){

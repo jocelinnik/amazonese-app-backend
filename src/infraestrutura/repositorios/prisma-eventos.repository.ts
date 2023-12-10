@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Evento as PrismaEvento } from "@prisma/client";
 
 import { Evento } from "@/dominio/modelos/evento.model";
 import { Organizador } from "@/dominio/modelos/organizador.model";
@@ -16,21 +16,24 @@ class PrismaEventosRepository implements EventosRepository {
     }
 
     public async buscarEventosFavoritosParticipante(participante: Participante): Promise<Evento[]> {
-        const dadosEventos = await this._conexao.evento.findMany({
+        const dadosEventos = await this._conexao.eventoFavorito.findMany({
             where: {
-                participantesFavoritaram: {
-                    every: {
-                        idParticipante: participante.id
-                    }
-                }
+                idParticipante: participante.id
             },
             include: {
-                categorias: true,
-                organizador: true
+                evento: {
+                    include: {
+                        categorias: true,
+                        organizador: true
+                    }
+                }
             }
         });
 
-        return dadosEventos.map(evento => this.hidratarEvento(evento));
+        return (
+            dadosEventos
+                .map(ev => ev.evento)
+                .map(evento => this.hidratarEvento(evento)));
     }
 
     public async buscarEventoPorId(id: string): Promise<Evento> {

@@ -18,6 +18,7 @@ class BuscarEventosFavoritosParticipanteController {
     public async executar(req: Request, res: Response): Promise<void> {
         try{
             const { cpf_participante } = req.params;
+            console.log({ cpf_participante });
             const eventos = await this._useCase.executar({ cpf_participante });
             res.status(200).json(eventos);
         }catch(e: any){
