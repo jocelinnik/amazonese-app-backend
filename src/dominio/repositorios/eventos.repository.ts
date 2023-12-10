@@ -1,7 +1,10 @@
 import { Evento } from "@/dominio/modelos/evento.model";
 import { Organizador } from "@/dominio/modelos/organizador.model";
+import { Participante } from "@/dominio/modelos/participante.model";
 
 interface EventosRepository {
+
+    buscarEventosFavoritosParticipante(participante: Participante): Promise<Evento[]>;
 
     buscarEventoPorId(id: string): Promise<Evento>;
     

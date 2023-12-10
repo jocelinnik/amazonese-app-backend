@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 
+import { BuscarEventosFavoritosParticipante } from "@/aplicacao/casos-uso/buscar-eventos-favoritos-participante.usecase";
 import { BuscarEventosPorLocalidade } from "@/aplicacao/casos-uso/buscar-eventos-por-localidade.usecase";
 import { BuscarEventosPorOrganizador } from "@/aplicacao/casos-uso/buscar-eventos-por-organizador.usecase";
 import { BuscarEventosProximos } from "@/aplicacao/casos-uso/buscar-eventos-proximos.usecase";
@@ -17,6 +18,7 @@ import { EventosRepository } from "@/dominio/repositorios/eventos.repository";
 import { OrganizadoresRepository } from "@/dominio/repositorios/organizadores.repository";
 import { ParticipantesRepository } from "@/dominio/repositorios/participantes.repository";
 import { ContainerDI } from "@/infraestrutura/di/container-di";
+import { BuscarEventosFavoritosParticipanteController } from "@/infraestrutura/http/controllers/buscar-eventos-favoritos-participante.controller";
 import { BuscarEventosPorLocalidadeController } from "@/infraestrutura/http/controllers/buscar-eventos-por-localidade.controller";
 import { BuscarEventosPorOrganizadorController } from "@/infraestrutura/http/controllers/buscar-eventos-por-organizador.controller";
 import { BuscarEventosProximosController } from "@/infraestrutura/http/controllers/buscar-eventos-proximos.controller";
@@ -144,6 +146,12 @@ const configurarDependencias = (): void => {
 
         return new RedefinirSenhaParticipante({ cifradorSenha, cifradorFraseSecreta, repository });
     });
+    container.set("BuscarEventosFavoritosParticipante", (cont: ContainerDI): BuscarEventosFavoritosParticipante => {
+        const eventosRepository = cont.get<EventosRepository>("EventosRepository");
+        const participantesRepository = cont.get<ParticipantesRepository>("ParticipantesRepository");
+
+        return new BuscarEventosFavoritosParticipante({ participantesRepository, eventosRepository });
+    });
 
     // Configurando as instâncias de objetos middleware
     // HTTP da aplicação...
@@ -209,6 +217,11 @@ const configurarDependencias = (): void => {
         const useCase = cont.get<RedefinirSenhaParticipante>("RedefinirSenhaParticipante");
 
         return new RedefinirSenhaParticipanteController({ useCase });
+    });
+    container.set("BuscarEventosFavoritosParticipanteController", (cont: ContainerDI): BuscarEventosFavoritosParticipanteController => {
+        const useCase = cont.get<BuscarEventosFavoritosParticipante>("BuscarEventosFavoritosParticipante");
+
+        return new BuscarEventosFavoritosParticipanteController({ useCase });
     });
 };
 
