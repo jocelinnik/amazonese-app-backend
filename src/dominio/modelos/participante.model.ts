@@ -33,6 +33,7 @@ class Participante {
         this._email = email;
         this._telefone = telefone;
         this._senha = senha;
+        this._fraseSecreta = fraseSecreta;
     }
 
     public get id(): string | undefined {
